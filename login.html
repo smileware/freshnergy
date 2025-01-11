@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="icon" type="image/x-icon" href="./img/freshnergy-fav.png">
+    <title>Freshnegy</title>
+</head>
+<body class="login">
+    <div class="wind-container">
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+    <div class="login-container">
+        <img src="./img/freshnegy-logo.png" alt="Freshnegy Logo" class="freshnegy-logo">
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Get the button element
+            const submitButton = document.querySelector('button[type="submit"]');
+            
+            // Change button text to loading state
+            submitButton.innerHTML = '<div class="spinner"></div>';
+            submitButton.disabled = true;
+            
+            const email = document.getElementById('email').value;
+            
+            try {
+                const response = await fetch('https://virtserver.swaggerhub.com/wdargon-600/Freshnergy/2.0.0/api/v2/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    console.log('Response:', data);
+                    localStorage.setItem('token', data.token);
+                    window.location.href = 'index.html';
+                } else {
+                    console.error('Login failed');
+                    submitButton.innerHTML = 'Login';
+                    submitButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                submitButton.innerHTML = 'Login';
+                submitButton.disabled = false;
+                
+            }
+        });
+    </script>
+</body>
+</html>

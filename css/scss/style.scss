@@ -1,0 +1,196 @@
+@import "./base";
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: Poppins, Anuphan, sans-serif;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.navbar {
+    width: 100%;
+    height: 70px;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #F4F4F4;
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.nav-logo {
+    height: 40px;
+}
+
+.nav-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: black; 
+    margin-left: 10px;
+    padding-left: 30px;
+    border-left: 1px solid #f4f4f4;
+}
+
+.container { 
+    max-width: 1200px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.content { 
+    background-color: #fafbfc;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    // padding: 2rem;
+    min-height: calc(100vh - 70px - 4rem); /* Subtract navbar height (70px) and padding (2rem top + 2rem bottom) */
+    width: 100%;
+}
+
+.last-updated-text { 
+    color: #666; 
+    font-size: 0.8rem;
+    text-align: right;
+    width: 100%;
+}
+
+.s-grid {
+    display: grid;
+    grid-gap: var(--s-space);
+    margin-bottom: var(--s-space);
+    grid-template-columns: minmax(0, 1fr);
+    &.-m2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    &.-m3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    &::before,
+    &::after {
+      display: none;
+    }
+    .s-grid {
+      margin-bottom: 0;
+    }
+    @media (min-width: 992px) {
+      grid-gap: var(--s-space);
+      margin-bottom: var(--s-space);
+      &.-d2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      &.-d3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      &.-d4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      &.-d5 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      &.-d6 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+    }
+  }
+  
+.card  { 
+    background-color: white;
+    border: 1px solid #F8F9FA;
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+    .card-label {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        color: var(--s-accent);
+    }
+    .card-title { 
+        margin-top: 0;
+        color: #05004E;
+        font-weight: bold;
+        font-size: 22px;
+    }
+    .box {
+        padding: 20px var(--s-space);
+        border-radius: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        &.-co2 { 
+            background-color: #FFE2E5;
+            .box-icon { 
+                background-color: #FA5A7D;
+            }
+        }
+        &.-pm1 { 
+            background-color: #FFF4DE; 
+            .box-icon { 
+                background-color: #FF947A;
+            }
+        }
+        &.-pm10 { 
+            background-color: #DCFCE7; 
+            .box-icon { 
+                background-color: #3CD856;
+            }
+        }
+        &.-pm2_5 { 
+            background-color: #F3E8FF; 
+            .box-icon { 
+                background-color: #BF83FF;
+            }
+        }
+    }
+    .box-icon { 
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .data { 
+        color: #151D48;
+        font-size: 30px;
+        font-weight: 600;
+        margin: 10px 0 5px;
+    }
+    .label { 
+        color: #425166;
+    }
+    .status { 
+        font-size: 12px;
+        color: #4079ED;
+        margin-top: 10px;
+    }
+}
+
+.footer { 
+    text-align: center; 
+    padding: 20px;
+    background-color: #fafbfc;
+    width: 100%;
+    box-sizing: border-box;
+    img { 
+        height: 30px; 
+        margin-bottom: 10px;
+    }
+    .copyright { 
+        color: #666; 
+        font-size: 0.5rem;
+    }
+}

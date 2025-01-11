@@ -1,0 +1,32 @@
+/*
+ * Font Name: Anuphan
+ */
+@font-face {
+  font-family: "Anuphan";
+  src: url("../fonts/anuphan/anuphan.woff2") format("woff2"), url("../fonts/anuphan/anuphan.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anuphan";
+  src: url("../fonts/anuphan/anuphan-medium.woff2") format("woff2"), url("../fonts/anuphan/anuphan-medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anuphan";
+  src: url("../fonts/anuphan/anuphan-bold.woff2") format("woff2"), url("../fonts/anuphan/anuphan-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --s-accent: #17b8cd;
+  --s-accent-hover: #f37a3e;
+  --s-space: 16px;
+}
