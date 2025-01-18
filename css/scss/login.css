@@ -236,3 +236,9 @@ button:active {
     transform: translate(0, 0) rotate(360deg) scale(1);
   }
 }
+
+.error-message {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
