@@ -154,43 +154,43 @@ function generateCard(data) {
                     <div class="s-grid -d5 -m2">
                         <div class="box -co2">
                             <div class="box-icon">
-                                <img src="../img/co2.svg" />
+                                <img src="./img/co2.svg" />
                             </div>
                             <div class="data"><span class="data-co2">0</span></div>
                              <div class="label">CO₂</div>
-                            <img src="../img/co2.svg" class="box-bg" />
+                            <img src="./img/co2.svg" class="box-bg" />
                         </div>
                         <div class="box -pm1">
                             <div class="box-icon">
-                                <img src="../img/pm1.svg" />
+                                <img src="./img/pm1.svg" />
                             </div>
                             <div class="data"><span class="data-pm1">0</span></div>
                             <div class="label">PM1</div>
-                            <img src="../img/pm1.svg" class="box-bg" />
+                            <img src="./img/pm1.svg" class="box-bg" />
                         </div>
                         <div class="box -pm2_5">
                             <div class="box-icon">
-                                <img src="../img/pm25.svg" />
+                                <img src="./img/pm25.svg" />
                             </div>
                             <div class="data"><span class="data-pm2_5">0</span></div>
                             <div class="label">PM2.5</div>
-                            <img src="../img/pm25.svg" class="box-bg" />
+                            <img src="./img/pm25.svg" class="box-bg" />
                         </div>
                         <div class="box -pm4">
                             <div class="box-icon">
-                                <img src="../img/pm4.svg" />
+                                <img src="./img/pm4.svg" />
                             </div>
                             <div class="data"><span class="data-pm4">0</span></div>
                             <div class="label">PM4</div>
-                            <img src="../img/pm4.svg" class="box-bg" />
+                            <img src="./img/pm4.svg" class="box-bg" />
                         </div>
                         <div class="box -pm10">
                             <div class="box-icon">
-                                <img src="../img/pm10.svg" />
+                                <img src="./img/pm10.svg" />
                             </div>
                             <div class="data"><span class="data-pm10"></span></div>
                             <div class="label">PM10</div>
-                            <img src="../img/pm10.svg" class="box-bg" />
+                            <img src="./img/pm10.svg" class="box-bg" />
                         </div>
                     </div>
                 </div>`;
