@@ -152,6 +152,14 @@ function generateCard(data) {
                     <div class="card-label">LOCATION</div>
                     <h2 class="card-title">${element.room || element.name}</h2>
                     <div class="s-grid -d5 -m2">
+                        <div class="box -pm2_5">
+                            <div class="box-icon">
+                                <img src="./img/pm25.svg" />
+                            </div>
+                            <div class="data"><span class="data-pm2_5">0</span></div>
+                            <div class="label">PM2.5</div>
+                            <img src="./img/pm25.svg" class="box-bg" />
+                        </div>
                         <div class="box -co2">
                             <div class="box-icon">
                                 <img src="./img/co2.svg" />
@@ -167,14 +175,6 @@ function generateCard(data) {
                             <div class="data"><span class="data-pm1">0</span></div>
                             <div class="label">PM1</div>
                             <img src="./img/pm1.svg" class="box-bg" />
-                        </div>
-                        <div class="box -pm2_5">
-                            <div class="box-icon">
-                                <img src="./img/pm25.svg" />
-                            </div>
-                            <div class="data"><span class="data-pm2_5">0</span></div>
-                            <div class="label">PM2.5</div>
-                            <img src="./img/pm25.svg" class="box-bg" />
                         </div>
                         <div class="box -pm4">
                             <div class="box-icon">
