@@ -147,6 +147,55 @@ async function getDevices(devices = []) {
 function generateCard(data) { 
     const contentElement = document.getElementById('content');
     let elem = '';
+
+    // Add average card first
+    elem += `<div class="card" id="average-card">
+                <div class="card-label">LOCATION</div>
+                <h2 class="card-title">Average of All Locations</h2>
+                <div class="s-grid -d5 -m2">
+                    <div class="box -pm2_5">
+                        <div class="box-icon">
+                            <img src="./img/pm25.svg" />
+                        </div>
+                        <div class="data"><span class="data-pm2_5">0</span></div>
+                        <div class="label">PM2.5</div>
+                        <img src="./img/pm25.svg" class="box-bg" />
+                    </div>
+                    <div class="box -co2">
+                        <div class="box-icon">
+                            <img src="./img/co2.svg" />
+                        </div>
+                        <div class="data"><span class="data-co2">0</span></div>
+                        <div class="label">CO₂</div>
+                        <img src="./img/co2.svg" class="box-bg" />
+                    </div>
+                    <div class="box -pm1">
+                        <div class="box-icon">
+                            <img src="./img/pm1.svg" />
+                        </div>
+                        <div class="data"><span class="data-pm1">0</span></div>
+                        <div class="label">PM1</div>
+                        <img src="./img/pm1.svg" class="box-bg" />
+                    </div>
+                    <div class="box -pm4">
+                        <div class="box-icon">
+                            <img src="./img/pm4.svg" />
+                        </div>
+                        <div class="data"><span class="data-pm4">0</span></div>
+                        <div class="label">PM4</div>
+                        <img src="./img/pm4.svg" class="box-bg" />
+                    </div>
+                    <div class="box -pm10">
+                        <div class="box-icon">
+                            <img src="./img/pm10.svg" />
+                        </div>
+                        <div class="data"><span class="data-pm10">0</span></div>
+                        <div class="label">PM10</div>
+                        <img src="./img/pm10.svg" class="box-bg" />
+                    </div>
+                </div>
+            </div>`;
+
     data.device.forEach(element => {
         elem += ` <div class="card" id="${element.cid}">
                     <div class="card-label">LOCATION</div>
@@ -200,25 +249,74 @@ function generateCard(data) {
 
 function generateData(data = []) { 
     const pm25Values = []; 
+    // Calculate averages
+    let totalCo2 = 0;
+    let totalPm1 = 0;
+    let totalPm25 = 0;
+    let totalPm4 = 0;
+    let totalPm10 = 0;
+    let visibleLocations = 0;
+
     data.forEach(element => {
         const cardElem = document.getElementById(element.cid);
-        if (cardElem.classList.contains('hide')) {
-            cardElem.classList.remove('hide');
+
+        if (cardElem && !cardElem.classList.contains('hide')) {
+            visibleLocations++;
+            totalCo2 += parseFloat(element.sensor.co2) || 0;
+            totalPm1 += parseFloat(element.sensor.pm1) || 0;
+            totalPm25 += parseFloat(element.sensor.pm2_5) || 0;
+            totalPm4 += parseFloat(element.sensor.pm4) || 0;
+            totalPm10 += parseFloat(element.sensor.pm10) || 0;
         }
-        cardElem.querySelector('.data-co2').innerHTML = element.sensor.co2;
-        cardElem.querySelector('.data-pm1').innerHTML = element.sensor.pm1;
-        cardElem.querySelector('.data-pm2_5').innerHTML = element.sensor.pm2_5;
-        cardElem.querySelector('.data-pm4').innerHTML = element.sensor.pm4;
-        cardElem.querySelector('.data-pm10').innerHTML = element.sensor.pm10;
+
+        // Update individual cards
+        if (cardElem) {
+            if (cardElem.classList.contains('hide')) {
+                cardElem.classList.remove('hide');
+            }
+            cardElem.querySelector('.data-co2').innerHTML = element.sensor.co2;
+            cardElem.querySelector('.data-pm1').innerHTML = element.sensor.pm1;
+            cardElem.querySelector('.data-pm2_5').innerHTML = element.sensor.pm2_5;
+            cardElem.querySelector('.data-pm4').innerHTML = element.sensor.pm4;
+            cardElem.querySelector('.data-pm10').innerHTML = element.sensor.pm10;
+
+            // Check if the card is for Canteen and retrieve PM2.5
+            const cardTitle = cardElem.querySelector('.card-title').innerText;
+            if (cardTitle === 'Canteen') {
+                const pm25Value = parseFloat(cardElem.querySelector('.data-pm2_5').innerText);
+                pm25Values.push({ cid: element.cid, pm2_5: pm25Value });
+            }
+        }
+
+        // if (cardElem.classList.contains('hide')) {
+        //     cardElem.classList.remove('hide');
+        // }
+        // cardElem.querySelector('.data-co2').innerHTML = element.sensor.co2;
+        // cardElem.querySelector('.data-pm1').innerHTML = element.sensor.pm1;
+        // cardElem.querySelector('.data-pm2_5').innerHTML = element.sensor.pm2_5;
+        // cardElem.querySelector('.data-pm4').innerHTML = element.sensor.pm4;
+        // cardElem.querySelector('.data-pm10').innerHTML = element.sensor.pm10;
 
 
-        // Check if the card is for Canteen and retrieve PM2.5
-        const cardTitle = cardElem.querySelector('.card-title').innerText;
-        if (cardTitle === 'Canteen') {
-            const pm25Value = parseFloat(cardElem.querySelector('.data-pm2_5').innerText);
-            pm25Values.push({ cid: element.cid, pm2_5: pm25Value });
-        }
+        // // Check if the card is for Canteen and retrieve PM2.5
+        // const cardTitle = cardElem.querySelector('.card-title').innerText;
+        // if (cardTitle === 'Canteen') {
+        //     const pm25Value = parseFloat(cardElem.querySelector('.data-pm2_5').innerText);
+        //     pm25Values.push({ cid: element.cid, pm2_5: pm25Value });
+        // }
     })
+    // [AVERAGE] Update average card
+     if (visibleLocations > 0) {
+        const averageCard = document.getElementById('average-card');
+        if (averageCard) {
+            averageCard.querySelector('.data-co2').innerHTML = (totalCo2 / visibleLocations).toFixed(1);
+            averageCard.querySelector('.data-pm1').innerHTML = (totalPm1 / visibleLocations).toFixed(1);
+            averageCard.querySelector('.data-pm2_5').innerHTML = (totalPm25 / visibleLocations).toFixed(1);
+            averageCard.querySelector('.data-pm4').innerHTML = (totalPm4 / visibleLocations).toFixed(1);
+            averageCard.querySelector('.data-pm10').innerHTML = (totalPm10 / visibleLocations).toFixed(1);
+        }
+    }
+
      // Find the lowest PM2.5 value and its CID
     const lowestPm25 = pm25Values.reduce((lowest, current) => {
         return current.pm2_5 < lowest.pm2_5 ? current : lowest;
