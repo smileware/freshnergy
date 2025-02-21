@@ -1,8 +1,18 @@
-// At the beginning of script.js
+// Constants at the top
 const DEFAULT_EMAIL = 'aqi@ptis.ac.th';
 const DEFAULT_PIN = '7VR2fSLR';
+const CORS_PROXY = "http://127.0.0.1:8080/";
 
-// First, try to authenticate and get token
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+
+// Authentication function
 async function authenticate() {
     try {
         const response = await fetch('https://app.freshnergy.com/api/v2/login', {
@@ -31,83 +41,78 @@ async function authenticate() {
     }
 }
 
-// Modify your existing initialization code to use the authentication
+// Main initialization
 document.addEventListener('DOMContentLoaded', async () => {
-    const modal = document.getElementById('modal');
-    
     // Get or create new token
     let token = getCookie('token');
     if (!token) {
         token = await authenticate();
     }
 
-    // Proceed with your existing logic
-    setTimeout(async () => {
-        modal.style.display = 'none';
-        const result = await getUID(DEFAULT_PIN, token, DEFAULT_EMAIL);
-        if (result.success) {
-            const data = result.data;
-            getDevices(data.device);
-        } else {
-            console.error(result.error);
-            // If there's an error, try re-authenticating
-            const newToken = await authenticate();
-            if (newToken) {
-                const retryResult = await getUID(DEFAULT_PIN, newToken, DEFAULT_EMAIL);
-                if (retryResult.success) {
-                    const data = retryResult.data;
-                    getDevices(data.device);
-                }
+    // Initialize with the token
+    const result = await getUID(DEFAULT_PIN, token, DEFAULT_EMAIL);
+    if (result.success) {
+        const data = result.data;
+        getDevices(data.device);
+    } else {
+        console.error(result.error);
+        // If there's an error, try re-authenticating
+        const newToken = await authenticate();
+        if (newToken) {
+            const retryResult = await getUID(DEFAULT_PIN, newToken, DEFAULT_EMAIL);
+            if (retryResult.success) {
+                const data = retryResult.data;
+                getDevices(data.device);
             }
         }
-    }, 1000);
+    }
 });
 
 
 
 
-const CORS_PROXY = "http://127.0.0.1:8080/";
-
-// Function to get cookie by name
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
-
-const token = getCookie('token');
-const email = getCookie('email');
-const pin = getCookie('pin');
 
 
-if (!token) {
-    window.location.href = 'login.html';
-}
+// // Function to get cookie by name
+// function getCookie(name) {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+//     return null;
+// }
 
-const modal = document.getElementById('modal');
-setTimeout(async () => {
-    if (pin) {
-        modal.style.display = 'none';
-        // Fetch with existing pin
-        const result = await getUID(pin, token, email);
-        if (result.success) {
-            const data = result.data;
-            getDevices(data.device); 
-        } else {
-            console.error(result.error);
-        }
-    } else {
-        modal.style.display = 'flex';
-    }
-}, 1000); 
+// const token = getCookie('token');
+// const email = getCookie('email');
+// const pin = getCookie('pin');
 
-function signOut() { 
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "pin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = '/login.html';
-}
+
+// if (!token) {
+//     window.location.href = 'login.html';
+// }
+
+// const modal = document.getElementById('modal');
+// setTimeout(async () => {
+//     if (pin) {
+//         modal.style.display = 'none';
+//         // Fetch with existing pin
+//         const result = await getUID(pin, token, email);
+//         if (result.success) {
+//             const data = result.data;
+//             getDevices(data.device); 
+//         } else {
+//             console.error(result.error);
+//         }
+//     } else {
+//         modal.style.display = 'flex';
+//     }
+// }, 1000); 
+
+// function signOut() { 
+//     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     document.cookie = "pin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     window.location.href = '/login.html';
+// }
 
 
 // Fetch API logic moved to a new function
@@ -140,46 +145,46 @@ async function getUID(pin, token, email) {
 }
 
 // Event listener for form submission
-document.querySelector('.form-pin').addEventListener('submit', async (e) => {
-    e.preventDefault();
+// document.querySelector('.form-pin').addEventListener('submit', async (e) => {
+//     e.preventDefault();
 
-    // Get the button element
-    const submitButton = document.querySelector('#submit-btn');
+//     // Get the button element
+//     const submitButton = document.querySelector('#submit-btn');
 
-    // Change button text to loading state
-    submitButton.innerHTML = '<div class="spinner"></div>';
-    submitButton.disabled = true;
+//     // Change button text to loading state
+//     submitButton.innerHTML = '<div class="spinner"></div>';
+//     submitButton.disabled = true;
 
-    const pin = document.getElementById('pin').value;
+//     const pin = document.getElementById('pin').value;
 
-    // Call the getUID function
-    const result = await getUID(pin, token, email);
+//     // Call the getUID function
+//     const result = await getUID(pin, token, email);
 
-    if (result.success) {
-        const data = result.data;
+//     if (result.success) {
+//         const data = result.data;
 
-        // Set cookie for pin
-        document.cookie = `pin=${pin}; path=/; secure; samesite=strict; max-age=86400`;
+//         // Set cookie for pin
+//         document.cookie = `pin=${pin}; path=/; secure; samesite=strict; max-age=86400`;
 
-        // Hide the modal
-        const modal = document.getElementById('modal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-        // Fetch and display device data
-        getDevices(data.device);
-    } else {
-        // Handle errors
-        console.log(result.error);
-        const pinInput = document.getElementById('pin');
-        pinInput.style.border = '2px solid red';
-        submitButton.innerHTML = 'SUBMIT';
-        submitButton.disabled = false;
+//         // Hide the modal
+//         const modal = document.getElementById('modal');
+//         if (modal) {
+//             modal.style.display = 'none';
+//         }
+//         // Fetch and display device data
+//         getDevices(data.device);
+//     } else {
+//         // Handle errors
+//         console.log(result.error);
+//         const pinInput = document.getElementById('pin');
+//         pinInput.style.border = '2px solid red';
+//         submitButton.innerHTML = 'SUBMIT';
+//         submitButton.disabled = false;
 
-        const errorMessage = document.querySelector('.error-message');
-        errorMessage.textContent = result.error;
-    }
-});
+//         const errorMessage = document.querySelector('.error-message');
+//         errorMessage.textContent = result.error;
+//     }
+// });
 
 
 
@@ -431,28 +436,54 @@ function updateLastUpdated() {
         console.error('Pin not available for fetching updates.');
     }
 }
-// Update every 10 minute
-setInterval(updateLastUpdated, 600000);
+// // Update every 10 minute
+// setInterval(updateLastUpdated, 600000);
 
-function validateCookies() {
+// function validateCookies() {
+//     const token = getCookie('token');
+//     const email = getCookie('email');
+//     const pin = getCookie('pin');
+
+//     if (!token || !email || !pin) {
+//         console.warn('Session expired or cookies are missing. Redirecting to login.');
+//         window.location.href = 'login.html'; // Redirect to login
+//         return false;
+//     }
+//     return true;
+// }
+
+// function autoLogoutOnCookieExpiry() {
+//     if (!validateCookies()) {
+//         console.warn('Cookies expired. Logging out.');
+//         signOut(); // Call the sign-out function
+//     }
+// }
+
+// // Check for expired cookies every 1 minute
+// setInterval(autoLogoutOnCookieExpiry, 60000); // 60 seconds
+
+
+
+
+// FEB 21
+async function validateAndRefreshToken() {
     const token = getCookie('token');
-    const email = getCookie('email');
-    const pin = getCookie('pin');
-
-    if (!token || !email || !pin) {
-        console.warn('Session expired or cookies are missing. Redirecting to login.');
-        window.location.href = 'login.html'; // Redirect to login
-        return false;
+    
+    if (!token) {
+        console.warn('Token missing, attempting to re-authenticate...');
+        const newToken = await authenticate();
+        if (newToken) {
+            // Fetch new data with the new token
+            const result = await getUID(DEFAULT_PIN, newToken, DEFAULT_EMAIL);
+            if (result.success) {
+                const data = result.data;
+                getDevices(data.device);
+            }
+        } else {
+            console.error('Failed to re-authenticate');
+        }
     }
-    return true;
 }
 
-function autoLogoutOnCookieExpiry() {
-    if (!validateCookies()) {
-        console.warn('Cookies expired. Logging out.');
-        signOut(); // Call the sign-out function
-    }
-}
-
-// Check for expired cookies every 1 minute
-setInterval(autoLogoutOnCookieExpiry, 60000); // 60 seconds
+// Check and refresh token if needed every 1 minute
+setInterval(validateAndRefreshToken, 60000); // 60 seconds
