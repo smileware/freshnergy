@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const result = await getUID(DEFAULT_PIN, token, DEFAULT_EMAIL);
     if (result.success) {
         const data = result.data;
-        getDevices(data.device);
+        getDevices(data.device, token);
     } else {
         console.error(result.error);
         // If there's an error, try re-authenticating
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const retryResult = await getUID(DEFAULT_PIN, newToken, DEFAULT_EMAIL);
             if (retryResult.success) {
                 const data = retryResult.data;
-                getDevices(data.device);
+                getDevices(data.device, newToken);
             }
         }
     }
@@ -188,7 +188,7 @@ async function getUID(pin, token, email) {
 
 
 
-async function getDevices(devices = []) {
+async function getDevices(devices = [], token) {
     const cidArray = devices.map(item => item.cid);
     const requestBody = {
         cid: cidArray,
@@ -419,13 +419,14 @@ function updateLastUpdated() {
         second: '2-digit'
     });
     document.getElementById('lastUpdated').textContent = formattedDate;
+    const token = getCookie('token');
      // Fetch everything again
-     if (pin) {
-        getUID(pin, token, email)
+     if (DEFAULT_PIN) {
+        getUID(DEFAULT_PIN, token, DEFAULT_EMAIL)
             .then(result => {
                 if (result.success) {
                     const data = result.data;
-                    getDevices(data.device); // Update device data
+                    getDevices(data.device, token); // Update device data
                     console.log('fetch again');
                 } else {
                     console.error('Error fetching UID data:', result.error);
