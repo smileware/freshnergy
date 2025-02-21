@@ -1,47 +1,43 @@
 const CORS_PROXY = "http://127.0.0.1:8080/";
 
-// Function to get cookie by name
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
+// Fixed credentials
+const fixedEmail = "aqi@ptis.ac.th";
+const fixedPin = "7VR2fSLR";
 
-const token = getCookie('token');
-const email = getCookie('email');
-const pin = getCookie('pin');
+// Automatically set cookies
+document.cookie = `token=FAKE_TOKEN; path=/; secure; samesite=strict; max-age=86400`;
+document.cookie = `email=${fixedEmail}; path=/; secure; samesite=strict; max-age=86400`;
+document.cookie = `pin=${fixedPin}; path=/; secure; samesite=strict; max-age=86400`;
 
-if (!token) {
-    window.location.href = 'login.html';
-}
+const token = getCookie('token'); 
+const email = fixedEmail;
+const pin = fixedPin;
 
 const modal = document.getElementById('modal');
+
+// Hide modal since login is bypassed
+modal.style.display = 'none';
+
+// Fetch data directly using the fixed credentials
 setTimeout(async () => {
-    if (pin) {
-        modal.style.display = 'none';
-        // Fetch with existing pin
-        const result = await getUID(pin, token, email);
-        if (result.success) {
-            const data = result.data;
-            getDevices(data.device); 
-        } else {
-            console.error(result.error);
-        }
+    const result = await getUID(pin, token, email);
+    if (result.success) {
+        const data = result.data;
+        getDevices(data.device); 
     } else {
-        modal.style.display = 'flex';
+        console.error(result.error);
     }
 }, 1000); 
 
+// Sign out function remains in case needed
 function signOut() { 
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "pin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = '/login.html';
+    window.location.href = '/index.html';
 }
 
-
-// Fetch API logic moved to a new function
+// Fetch API logic remains the same
 async function getUID(pin, token, email) {
     try {
         const response = await fetch('https://app.freshnergy.com/api/v2/uid', {
@@ -59,16 +55,96 @@ async function getUID(pin, token, email) {
         if (response.ok) {
             const data = await response.json();
             generateCard(data);
-            return { success: true, data }; // Return success and data
+            return { success: true, data };
         } else {
             const errorData = await response.json();
-            return { success: false, error: errorData.msg }; // Return error message
+            return { success: false, error: errorData.msg };
         }
     } catch (error) {
         console.error('Error:', error);
-        return { success: false, error: 'Network error. Please try again.' }; // Return network error
+        return { success: false, error: 'Network error. Please try again.' };
     }
 }
+
+// Disable modal and login submission event since it's not needed
+document.querySelector('.form-pin').remove();
+
+
+// 
+// END: FIX EMAIL AND PIN;
+//  
+
+// const CORS_PROXY = "http://127.0.0.1:8080/";
+
+// // Function to get cookie by name
+// function getCookie(name) {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+//     return null;
+// }
+
+// const token = getCookie('token');
+// const email = getCookie('email');
+// const pin = getCookie('pin');
+
+// if (!token) {
+//     window.location.href = 'login.html';
+// }
+
+// const modal = document.getElementById('modal');
+// setTimeout(async () => {
+//     if (pin) {
+//         modal.style.display = 'none';
+//         // Fetch with existing pin
+//         const result = await getUID(pin, token, email);
+//         if (result.success) {
+//             const data = result.data;
+//             getDevices(data.device); 
+//         } else {
+//             console.error(result.error);
+//         }
+//     } else {
+//         modal.style.display = 'flex';
+//     }
+// }, 1000); 
+
+// function signOut() { 
+//     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     document.cookie = "pin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+//     window.location.href = '/login.html';
+// }
+
+
+// // Fetch API logic moved to a new function
+// async function getUID(pin, token, email) {
+//     try {
+//         const response = await fetch('https://app.freshnergy.com/api/v2/uid', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Authorization': token
+//             },
+//             body: JSON.stringify({
+//                 email: email,
+//                 pin: pin
+//             })
+//         });
+
+//         if (response.ok) {
+//             const data = await response.json();
+//             generateCard(data);
+//             return { success: true, data }; // Return success and data
+//         } else {
+//             const errorData = await response.json();
+//             return { success: false, error: errorData.msg }; // Return error message
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return { success: false, error: 'Network error. Please try again.' }; // Return network error
+//     }
+// }
 
 // Event listener for form submission
 document.querySelector('.form-pin').addEventListener('submit', async (e) => {
